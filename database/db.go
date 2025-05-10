@@ -18,12 +18,17 @@ func InitDB() {
 		log.Fatal("Failed to connect database:", err)
 	}
 
-	DB.AutoMigrate(&models.Product{})
+	if err := DB.AutoMigrate(&models.Product{}); err != nil {
+		log.Fatalf("❌ Failed to migrate database: %v", err)
+	}
 
 	DB2, err = gorm.Open(sqlite.Open("file:database/carts.db?_pragma=foreign_keys(ON)"), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Failed to connect database:", err)
 	}
 
-	DB2.AutoMigrate(&models.Cart{}, &models.CartItem{})
+	if err := DB2.AutoMigrate(&models.Cart{}, &models.CartItem{}); err != nil {
+		log.Fatalf("❌ Failed to migrate database: %v", err)
+	}
+
 }

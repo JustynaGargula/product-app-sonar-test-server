@@ -13,9 +13,9 @@ import (
 func CreateProduct(c echo.Context) error {
 	var product models.Product
 	bindError := c.Bind(&product)
-	if bindError == nil {		
+	if bindError == nil {
 		var newProduct = models.Product{
-			Name: product.Name,
+			Name:  product.Name,
 			Price: product.Price,
 		}
 		res := database.DB.Create(&newProduct)
@@ -23,10 +23,10 @@ func CreateProduct(c echo.Context) error {
 			return c.JSON(http.StatusBadRequest, res.Error)
 		}
 		return c.JSON(http.StatusOK, newProduct)
-	} else{
+	} else {
 		return c.JSON(http.StatusBadRequest, bindError)
 	}
-	
+
 }
 
 func GetProduct(c echo.Context) error {
@@ -50,7 +50,7 @@ func GetProducts(c echo.Context) error {
 	if result.Error != nil {
 		return c.String(http.StatusNotFound, "No products found")
 	}
-  	return c.JSON(http.StatusOK, products)
+	return c.JSON(http.StatusOK, products)
 }
 
 func UpdateProduct(c echo.Context) error {
@@ -59,7 +59,7 @@ func UpdateProduct(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusBadRequest, "Invalid ID format")
 	}
-	
+
 	var product models.Product
 	var updatedProduct models.Product
 	bindError := c.Bind(&updatedProduct)
@@ -76,7 +76,7 @@ func UpdateProduct(c echo.Context) error {
 	}
 }
 
-func DeleteProduct (c echo.Context) error {
+func DeleteProduct(c echo.Context) error {
 	id := c.Param("id")
 	var product models.Product
 	result := database.DB.Delete(&product, id)

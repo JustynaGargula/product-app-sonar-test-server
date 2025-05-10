@@ -34,9 +34,13 @@ func TestProductEndpoints(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, http.StatusOK, resp.StatusCode)
 
-		defer resp.Body.Close()
+		defer func() {
+			_ = resp.Body.Close()
+		}()
 		var created Product
-		json.NewDecoder(resp.Body).Decode(&created)
+		if err := json.NewDecoder(resp.Body).Decode(&created); err != nil {
+			t.Fatalf("❌ Failed to decode response: %v", err)
+		}
 		assert.Equal(t, body.Name, created.Name)
 		assert.Equal(t, body.Price, created.Price)
 
@@ -44,7 +48,6 @@ func TestProductEndpoints(t *testing.T) {
 		assert.NotZero(t, createdID)
 	})
 
-	
 	// t.Run("Create Product 2", func(t *testing.T) {
 	// 	body := Product{
 	// 		Name:  "Test Product 2",
@@ -72,7 +75,10 @@ func TestProductEndpoints(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, http.StatusOK, resp.StatusCode)
 
-		defer resp.Body.Close()
+		defer func() {
+			_ = resp.Body.Close()
+		}()
+
 		body, _ := io.ReadAll(resp.Body)
 		assert.Contains(t, string(body), "Test Product")
 	})
@@ -83,10 +89,15 @@ func TestProductEndpoints(t *testing.T) {
 		resp, err := http.Get(url)
 		assert.NoError(t, err)
 		assert.Equal(t, http.StatusOK, resp.StatusCode)
+		defer func() {
+			_ = resp.Body.Close()
+		}()
 
-		defer resp.Body.Close()
 		var p Product
-		json.NewDecoder(resp.Body).Decode(&p)
+		if err := json.NewDecoder(resp.Body).Decode(&p); err != nil {
+			t.Fatalf("❌ Failed to decode response: %v", err)
+		}
+
 		assert.Equal(t, createdID, p.ID)
 		assert.Equal(t, "Test Product", p.Name)
 	})
@@ -108,9 +119,14 @@ func TestProductEndpoints(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, http.StatusOK, resp.StatusCode)
 
-		defer resp.Body.Close()
+		defer func() {
+			_ = resp.Body.Close()
+		}()
 		var updated Product
-		json.NewDecoder(resp.Body).Decode(&updated)
+		if err := json.NewDecoder(resp.Body).Decode(&updated); err != nil {
+			t.Fatalf("❌ Failed to decode response: %v", err)
+		}
+
 		assert.Equal(t, "Updated Product", updated.Name)
 		assert.Equal(t, uint(123), updated.Price)
 	})
