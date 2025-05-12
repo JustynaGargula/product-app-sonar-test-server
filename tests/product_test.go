@@ -23,9 +23,11 @@ func TestProductEndpoints(t *testing.T) {
 	var createdID uint
 
 	// CREATE
+	const testProductName = "Test Product"
+	const failedDecodingMessage = "❌ Failed to decode response: %v"
 	t.Run("Create Product", func(t *testing.T) {
 		body := Product{
-			Name:  "Test Product",
+			Name:  testProductName,
 			Price: 999,
 		}
 		jsonBody, _ := json.Marshal(body)
@@ -39,7 +41,7 @@ func TestProductEndpoints(t *testing.T) {
 		}()
 		var created Product
 		if err := json.NewDecoder(resp.Body).Decode(&created); err != nil {
-			t.Fatalf("❌ Failed to decode response: %v", err)
+			t.Fatalf(failedDecodingMessage, err)
 		}
 		assert.Equal(t, body.Name, created.Name)
 		assert.Equal(t, body.Price, created.Price)
@@ -80,7 +82,7 @@ func TestProductEndpoints(t *testing.T) {
 		}()
 
 		body, _ := io.ReadAll(resp.Body)
-		assert.Contains(t, string(body), "Test Product")
+		assert.Contains(t, string(body), testProductName)
 	})
 
 	// GET ONE
@@ -95,11 +97,11 @@ func TestProductEndpoints(t *testing.T) {
 
 		var p Product
 		if err := json.NewDecoder(resp.Body).Decode(&p); err != nil {
-			t.Fatalf("❌ Failed to decode response: %v", err)
+			t.Fatalf(failedDecodingMessage, err)
 		}
 
 		assert.Equal(t, createdID, p.ID)
-		assert.Equal(t, "Test Product", p.Name)
+		assert.Equal(t, testProductName, p.Name)
 	})
 
 	// UPDATE
@@ -124,7 +126,7 @@ func TestProductEndpoints(t *testing.T) {
 		}()
 		var updated Product
 		if err := json.NewDecoder(resp.Body).Decode(&updated); err != nil {
-			t.Fatalf("❌ Failed to decode response: %v", err)
+			t.Fatalf(failedDecodingMessage, err)
 		}
 
 		assert.Equal(t, "Updated Product", updated.Name)

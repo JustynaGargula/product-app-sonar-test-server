@@ -26,11 +26,12 @@ func main() {
 	})
 
 	// Products
+	const product_path = "/products/:id"
 	e.POST("/products", controllers.CreateProduct)
 	e.GET("/products", controllers.GetProducts)
-	e.GET("/products/:id", controllers.GetProduct)
-	e.PUT("/products/:id", controllers.UpdateProduct)
-	e.DELETE("/products/:id", controllers.DeleteProduct)
+	e.GET(product_path, controllers.GetProduct)
+	e.PUT(product_path, controllers.UpdateProduct)
+	e.DELETE(product_path, controllers.DeleteProduct)
 
 	//Cart
 	e.GET("/cart/:id", controllers.GetCart)
