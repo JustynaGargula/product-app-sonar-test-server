@@ -24,7 +24,7 @@ jobs:
         run: go test -coverprofile=coverage.out ./...
 
       - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-actio@v5
+        uses: SonarSource/sonarcloud-github-action@v5
         with:
           organization: product-app-ebiznes
           projectKey: product-app-ebiznes_sonar-test
