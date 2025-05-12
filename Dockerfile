@@ -12,9 +12,7 @@ COPY database/ ./database/
 COPY models/ ./models/
 COPY server.go .
 
-RUN go build -o server
-
-RUN chown -R appUser /app
+RUN go build -o server && RUN chown -R appUser /app
 USER appUser
 
 EXPOSE 1323
